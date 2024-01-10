@@ -6,7 +6,11 @@
     "start": "expo start",
     "android": "expo run:android",
     "ios": "expo run:ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "e2e:buildAndroid": "detox build --configuration android.emu.debug",
+    "e2e:testAndroid": "detox test --configuration android.emu.debug",
+    "e2e:buildIos": "detox build --configuration ios.sim.debug",
+    "e2e:testIos": "detox test --configuration ios.sim.debug"
   },
   "dependencies": {
     "expo": "~49.0.15",

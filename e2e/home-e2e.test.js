@@ -1,4 +1,4 @@
-describe("Home screen", () => {
+describe("E2E Test", () => {
   beforeAll(async () => {
     await device.launchApp();
   });
@@ -6,7 +6,7 @@ describe("Home screen", () => {
   it("Should show Email and Password Input Text Box", async () => {
     //Assert that Email and Password Input Box is visible
     await expect(element(by.text("Please Enter Your Email"))).toBeVisible();
-    await expect(element(by.text("Please Enter Your Password"))).toBeVisible();
+    await expect(element(by.label("password-label"))).toBeVisible();
   });
 
   it("Should type in Email and Password and login", async () => {
@@ -22,7 +22,31 @@ describe("Home screen", () => {
     await element(by.id("login-button")).tap();
   });
 
-  it('shows "Welcome" after sucessfull "Login"', async () => {
-    await expect(element(by.text("Welcome!"))).toBeVisible();
+  it('Should show "Welcome back" after sucessfull "Login"', async () => {
+    await waitFor(element(by.text("Welcome back")))
+      .toBeVisible()
+      .withTimeout(3000);
+  });
+
+  it("Should scroll and validate 'Women's Clothing' is shown", async () => {
+    await expect(element(by.label("Women's Clothing"))).not.toBeVisible();
+
+    await expect(element(by.text("Men's Clothing"))).toBeVisible();
+    await waitFor(element(by.label("women's clothing")))
+      .toBeVisible()
+      .whileElement(by.id("sectionList"))
+      .scroll(600, "down");
+
+    await expect(
+      element(
+        by.text("Rain Jacket Women Windbreaker Striped Climbing Raincoats")
+      )
+    ).not.toBeVisible();
+    await element(by.id("sectionList")).scroll(1000, "down");
+    await expect(
+      element(
+        by.text("Rain Jacket Women Windbreaker Striped Climbing Raincoats")
+      )
+    ).toBeVisible();
   });
 });

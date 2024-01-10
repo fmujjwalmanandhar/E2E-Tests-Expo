@@ -24,11 +24,25 @@ module.exports = {
       binaryPath:
         "ios/build/Build/Products/Release-iphonesimulator/eastestsexample.app",
     },
+    "ios.debug": {
+      type: "ios.app",
+      binaryPath:
+        "ios/build/Build/Products/Debug-iphonesimulator/eastestsexample.app",
+      build:
+        "xcodebuild -workspace ios/eastestsexample.xcworkspace -scheme eastestsexample -configuration Debug -sdk iphonesimulator -arch x86_64 -derivedDataPath ios/build",
+    },
     "android.release": {
       type: "android.apk",
       build:
         "cd android && ./gradlew :app:assembleRelease :app:assembleAndroidTest -DtestBuildType=release && cd ..",
       binaryPath: "android/app/build/outputs/apk/release/app-release.apk",
+    },
+    "android.debug": {
+      type: "android.apk",
+      binaryPath: "android/app/build/outputs/apk/debug/app-debug.apk",
+      build:
+        "cd android && ./gradlew :app:assembleDebug :app:assembleDebugAndroidTest -DtestBuildType=debug",
+      reversePorts: [8081],
     },
   },
   devices: {
@@ -46,13 +60,21 @@ module.exports = {
     },
   },
   configurations: {
-    "ios.release": {
+    "ios.sim.release": {
       device: "simulator",
       app: "ios.release",
     },
-    "android.release": {
+    "ios.sim.debug": {
+      device: "simulator",
+      app: "ios.debug",
+    },
+    "android.emu.release": {
       device: "emulator",
       app: "android.release",
+    },
+    "android.emu.debug": {
+      device: "emulator",
+      app: "android.debug",
     },
   },
 };

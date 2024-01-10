@@ -1,9 +1,20 @@
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  ActivityIndicator,
+  Pressable,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
+import MenuList from "./SectionList";
+import { palette } from "./palette";
 
 export default function App() {
   const [clicked, setClicked] = useState(false);
+  const [isLoading, setisLoading] = useState(false);
   const [loginData, setloginData] = useState({
     email: null,
     password: null,
@@ -34,8 +45,16 @@ export default function App() {
     }
   };
 
-  const _onPress = () => {
+  const _onGoBack = () => {
     setClicked((prevState) => !prevState);
+  };
+
+  const _onPress = () => {
+    setisLoading(true);
+    setTimeout(() => {
+      setClicked((prevState) => !prevState);
+      setisLoading(false);
+    }, 3000);
   };
 
   const isLoginDisable = !loginData.email && !loginData.password;
@@ -53,7 +72,9 @@ export default function App() {
             placeholder="Email"
             keyboardType={"email-address"}
           />
-          <Text style={styles.text}>Please Enter Your Password</Text>
+          <Text style={styles.text} accessibilityLabel="password-label">
+            Please Enter Your Password
+          </Text>
 
           <TextInput
             testID={"password"}
@@ -68,7 +89,7 @@ export default function App() {
             testID="login-button"
             style={({ pressed }) => [
               {
-                backgroundColor: pressed ? "#4630EB" : "#4E6CFF",
+                backgroundColor: pressed ? palette.primary : palette.secondary,
               },
               styles.button,
               isLoginDisable && styles.disableButtonStyle,
@@ -76,26 +97,33 @@ export default function App() {
             disabled={isLoginDisable}
             onPress={_onPress}
           >
-            <Text style={styles.loginText}>Login</Text>
+            {isLoading ? (
+              <ActivityIndicator color={palette.white} size={"small"} />
+            ) : (
+              <Text style={styles.loginText}>Login</Text>
+            )}
           </Pressable>
         </View>
       )}
       {clicked && (
-        <View style={styles.flex}>
-          <Text style={styles.hi}>Welcome!</Text>
-          <Pressable
+        <SafeAreaView style={styles.mainContainer}>
+          <View style={styles.mainContainer}>
+            <Text style={styles.hi}>Welcome back</Text>
+            <MenuList />
+            {/* <Pressable
             testID="go-back-button"
             style={({ pressed }) => [
               {
-                backgroundColor: pressed ? "#4630EB" : "#4E6CFF",
+                backgroundColor: pressed ? palette.primary : palette.secondary,
               },
               styles.button,
             ]}
-            onPress={_onPress}
+            onPress={_onGoBack}
           >
             <Text style={styles.loginText}>Go Back</Text>
-          </Pressable>
-        </View>
+          </Pressable> */}
+          </View>
+        </SafeAreaView>
       )}
       <StatusBar style="auto" />
     </View>
@@ -103,6 +131,9 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+  },
   flex: {
     flex: 1,
     justifyContent: "center",
@@ -114,7 +145,7 @@ const styles = StyleSheet.create({
   },
   hi: {
     fontSize: 30,
-    color: "#4E6CFF",
+    color: palette.secondary,
   },
   button: {
     alignItems: "center",
@@ -145,9 +176,9 @@ const styles = StyleSheet.create({
     marginVertical: 16,
     borderWidth: 1,
     padding: 10,
-    borderColor: "#AAAAAA",
+    borderColor: palette.borderColor,
   },
   disableButtonStyle: {
-    backgroundColor: "#B4C1FF",
+    backgroundColor: palette.disableColor,
   },
 });
