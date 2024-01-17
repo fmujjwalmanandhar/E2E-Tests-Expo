@@ -19,8 +19,10 @@ export default function App() {
     email: null,
     password: null,
   });
+  const [loginError, setloginError] = useState(null);
 
   const _onChange = (type) => (text) => {
+    setloginError(null);
     switch (type) {
       case "EMAIL":
         setloginData((prevState) => {
@@ -51,10 +53,19 @@ export default function App() {
 
   const _onPress = () => {
     setisLoading(true);
-    setTimeout(() => {
-      setClicked((prevState) => !prevState);
+    if (
+      loginData.email.toLowerCase() === "ujjwal.manandhar@fusemachines.com" &&
+      loginData.password === "Test@123"
+    ) {
+      setTimeout(() => {
+        setClicked((prevState) => !prevState);
+        setisLoading(false);
+      }, 3000);
+    } else {
       setisLoading(false);
-    }, 3000);
+
+      setloginError("Please provide correct email or password");
+    }
   };
 
   const isLoginDisable = !loginData.email && !loginData.password;
@@ -82,8 +93,11 @@ export default function App() {
             onChangeText={_onChange("PASSWORD")}
             value={loginData.password}
             placeholder="Password"
+            secureTextEntry
+            textContentType={"password"}
             keyboardType="visible-password"
           />
+          {!!loginError && <Text style={styles.errorText}>{loginError}</Text>}
 
           <Pressable
             testID="login-button"
@@ -180,5 +194,10 @@ const styles = StyleSheet.create({
   },
   disableButtonStyle: {
     backgroundColor: palette.disableColor,
+  },
+  errorText: {
+    fontSize: 16,
+    lineHeight: 21,
+    color: palette.errorColor,
   },
 });

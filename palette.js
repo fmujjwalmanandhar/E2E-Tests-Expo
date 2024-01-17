@@ -6,4 +6,5 @@ export const palette = {
   disableColor: "#B4C1FF",
   white: "#FFFFFF",
   menuBackground: "#f9c2ff",
+  errorColor: "#DC3545",
 };
